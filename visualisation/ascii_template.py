@@ -489,13 +489,12 @@ corners = [Corner(0, 0, 'wbo'), Corner(1, 0, 'wrb'), Corner(2, 0, 'wgr'), Corner
 edges = [Edge(0, 0, 'wb'), Edge(1, 0, 'wr'), Edge(2, 0, 'wg'), Edge(3, 0, 'wo'), Edge(4, 0, 'bo'), Edge(5, 0, 'go'), Edge(6, 0, 'gr'), Edge(7, 0, 'br'), Edge(8, 0, 'yg'), Edge(9, 0, 'yr'), Edge(10, 0, 'yb'), Edge(11, 0, 'yo')]
 centers = [Center(0, 'w'), Center(1, 'o'), Center(2, 'g'), Center(3, 'r'), Center(4, 'b'), Center(5, 'y')]
 
-print(sys.argv[0])
-
 # Program control
 if len(sys.argv) == 1:
     try:
         s = open('scramble.txt', 'r').read()
     except:
+        print("No scramble")
         s = ""
 else:
     s = sys.argv[1]
