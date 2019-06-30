@@ -21,12 +21,33 @@
     Usage:          ./ascii_template.py "SCRAMBLE"
                     SCRAMBLE must be a single string of moves seperated by spaces.
 """
-
+# Modules
 import sys
 
+# Get command line inputs
 msg = "Only one scramble as a single string can be input"
 assert(len(sys.argv) <= 2), msg
 
+
+"""
+    Class to represent a corner object
+    
+    Corner properties:  p - position of corner on cube (0 - 7)
+                        o - orientation of corner (0 - 2)
+                        c - colour of corner (3 characters)
+                        
+    Corner moves:       R, L, U, D, F, B    - Turn the Right, Left, Up, Down, Front, or Back face clockwise (90 degrees)
+                                            - Cycle p for 4 corners in R, L, ... face
+                                            - +/- to o for 4 corners in R, L, ... face if required
+                                            - No change to c
+                        Rp, Lp, ...         - Turn anticlockwise (-90 or 270 degrees)
+                                            - Cycle p for 4 corners in R, L, ... face
+                                            - +/- to o for 4 corners in R, L, ... face if required
+                                            - No change to c
+                        R2, L2, ...         - Turn 180 degrees
+                                            - Swap opposite corners on R, L, ... face i.e. 2 cycles in p
+                                            - No change to o or c
+"""
 class Corner:
     p = 0
     o = 0
@@ -160,6 +181,12 @@ class Corner:
         self.B2()
         self.B()
 
+"""
+    Class to represent a center object
+    
+    Center properties:  p - position of center on cube (0 - 5)
+                        c - colour of center (1 character)
+"""
 class Center:
     p = 0
     c = 'w'
@@ -168,6 +195,25 @@ class Center:
         self.p = position
         self.c = colour
 
+"""
+    Class to represent a edge object
+    
+    Edge properties:    p - position of edge on cube (0 - 11)
+                        o - orientation of edge (0 - 1)
+                        c - colour of edge (2 characters)
+                        
+    Edge moves:         R, L, U, D, F, B    - Turn the Right, Left, Up, Down, Front, or Back face clockwise (90 degrees)
+                                            - Cycle p for 4 edges in R, L, ... face
+                                            - + to o for 4 edges in R, L, ... face if required
+                                            - No change to c
+                        Rp, Lp, ...         - Turn anticlockwise (-90 or 270 degrees)
+                                            - Cycle p for 4 edges in R, L, ... face
+                                            - +/- to o for 4 edges in R, L, ... face if required
+                                            - No change to c
+                        R2, L2, ...         - Turn 180 degrees
+                                            - Swap opposite edges on R, L, ... face i.e. 2 cycles in p
+                                            - No change to o or c
+"""
 class Edge:
     p = 0
     o = 0
@@ -294,12 +340,16 @@ class Edge:
         self.B2()
         self.B()
 
+# For each piece in the cube cycle through the scramble updating the piece at each move
 def scramble(scramble, Corners, Edges):
+    # Parse scramble
     scramble = scramble.split(' ')
     s = []
     for m in scramble:
         if not m == '':
             s.append(m)
+            
+    # Move corners
     for corner in Corners:
         for move in s:
             if move.strip() == 'R':
@@ -338,7 +388,7 @@ def scramble(scramble, Corners, Edges):
                 corner.Bp()
             elif move.strip() == 'B2':
                 corner.B2()
-        
+    # Move edges
     for edge in Edges:
         for move in s:
             if move.strip() == 'R':
@@ -380,6 +430,8 @@ def scramble(scramble, Corners, Edges):
 
     return (Corners, Edges)
 
+
+# Print the scrambled cube to the screen
 def print_cube(c):
     print('              ___ ___ ___')
     print('             |   |   |   |')
@@ -413,7 +465,8 @@ def print_cube(c):
     print('             |___|___|___|')
 
 
-def make_layout(layout, Corners, Edges, Centers):
+# Using the scrambled pieces, fit the colours to an array based on location in the template
+def make_layout(Corners, Edges, Centers):
     c = [[],[],[],[],[],[],[],[]]
     e = [[],[],[],[],[],[],[],[],[],[],[],[]]
     for corner in Corners:
@@ -429,21 +482,24 @@ def make_layout(layout, Corners, Edges, Centers):
         else:
             e[edge.p] = edge.c[1] + edge.c[0]
     layout = [[c[7][2], e[10][1], c[6][1]], [e[4][0], Centers[4].c, e[7][0]], [c[0][1], e[0][1], c[1][2]], [c[7][1], e[4][1], c[0][2], c[0][0], e[0][0], c[1][0], c[1][1], e[7][1], c[6][2], c[6][0], e[10][0], c[7][0]], [e[11][1], Centers[1].c, e[3][1], e[3][0], Centers[0].c, e[1][0], e[1][1], Centers[3].c, e[9][1], e[9][0], Centers[5].c, e[11][0]], [c[4][2], e[5][1], c[3][1], c[3][0], e[2][0], c[2][0], c[2][2], e[6][1], c[5][1], c[5][0], e[8][0], c[4][0]], [c[3][2], e[2][1], c[2][1]], [e[5][0], Centers[2].c, e[6][0]], [c[4][1], e[8][1], c[5][2]]]
-    
-    
     return layout
 
+# Initialise pieces
 corners = [Corner(0, 0, 'wbo'), Corner(1, 0, 'wrb'), Corner(2, 0, 'wgr'), Corner(3, 0, 'wog'), Corner(4, 0, 'ygo'), Corner(5, 0, 'yrg'), Corner(6, 0, 'ybr'), Corner(7, 0, 'yob')]
 edges = [Edge(0, 0, 'wb'), Edge(1, 0, 'wr'), Edge(2, 0, 'wg'), Edge(3, 0, 'wo'), Edge(4, 0, 'bo'), Edge(5, 0, 'go'), Edge(6, 0, 'gr'), Edge(7, 0, 'br'), Edge(8, 0, 'yg'), Edge(9, 0, 'yr'), Edge(10, 0, 'yb'), Edge(11, 0, 'yo')]
 centers = [Center(0, 'w'), Center(1, 'o'), Center(2, 'g'), Center(3, 'r'), Center(4, 'b'), Center(5, 'y')]
 
+print(sys.argv[0])
+
+# Program control
 if len(sys.argv) == 1:
-    layout = [['b', 'b', 'b'], ['b', 'b', 'b'], ['b', 'b', 'b'], ['o', 'o', 'o', 'w', 'w', 'w', 'r', 'r', 'r', 'y', 'y', 'y'], ['o', 'o', 'o', 'w', 'w', 'w', 'r', 'r', 'r', 'y', 'y', 'y'], ['o', 'o', 'o', 'w', 'w', 'w', 'r', 'r', 'r', 'y', 'y', 'y'], ['g', 'g', 'g'], ['g', 'g', 'g'], ['g', 'g', 'g']]
-    print_cube(layout)
-elif len(sys.argv) == 2:
-    corners, edges = scramble(sys.argv[1], corners, edges)
-    layout = [['b', 'b', 'b'], ['b', 'b', 'b'], ['b', 'b', 'b'], ['o', 'o', 'o', 'w', 'w', 'w', 'r', 'r', 'r', 'y', 'y', 'y'], ['o', 'o', 'o', 'w', 'w', 'w', 'r', 'r', 'r', 'y', 'y', 'y'], ['o', 'o', 'o', 'w', 'w', 'w', 'r', 'r', 'r', 'y', 'y', 'y'], ['g', 'g', 'g'], ['g', 'g', 'g'], ['g', 'g', 'g']]
-    layout = make_layout(layout, corners, edges, centers)
-    print_cube(layout)
-        
-    
+    try:
+        s = open('scramble.txt', 'r').read()
+    except:
+        s = ""
+else:
+    s = sys.argv[1]
+
+corners, edges = scramble(s, corners, edges)
+layout = make_layout(corners, edges, centers)
+print_cube(layout)
