@@ -3,7 +3,7 @@ General Rubik's cube stuff
 ___
 Goals:
 ```
-1. Learn how the basics of GitHub and version control.
+1. Learn the basics of GitHub and version control.
 2. Create a Rubik's Cube simulation.
     2.1. 2D scramble viewer. 
     2.2. 3D animation.
