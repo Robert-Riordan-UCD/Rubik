@@ -16,6 +16,10 @@ Create a 2D scramble visualisation:
     
     ./visualisation/new_template.sh
     (generating a new scramble)
+Get user to solve the cube:
+
+	./interaction/play_terminal.sh
+	(Manual text entry in terminal and ASCII cube)
 
 ___
 Goals:
@@ -26,15 +30,20 @@ Goals:
     ~~2.1. 2D scramble viewer.~~
     
     2.2. 3D animation.
+3. Allow interaction via:
     
-    2.2. Allow interaction.
-3. Create a Rubik's Cube solver.
+    ~~3.2.1 Terminal.~~
+	
+	3.2.2 2D.
+	
+	3.2.3 3D.
+4. Create a Rubik's Cube solver.
     
-    3.1. Beginners method.
+    4.1. Beginners method.
     
-    3.2. CFOP method.
+    4.2. CFOP method.
     
-    3.3. Optimal method.
-4. Create an insertion finder.
-5. Begin to build my GitHub portfolio.
-6. Learn a language that allows easier animation.
+    4.3. Optimal method.
+5. Create an insertion finder.
+6. Begin to build my GitHub portfolio.
+7. Learn a language that allows easier animation.
